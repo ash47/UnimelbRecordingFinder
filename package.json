@@ -1,0 +1,10 @@
+{
+  "name": "UnimelbRecordingFinder",
+  "description": "Finds recording links for unimelb echo 360",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+	"cheerio": "*",
+	"xml2js": "*"
+  }
+}
