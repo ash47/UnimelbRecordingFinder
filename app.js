@@ -16,8 +16,90 @@ if(fs.existsSync('./recordings.json')) {
 var preLink = 'http://download.lecture.unimelb.edu.au/echo360/sections/';
 var postLink = '/section.xml';
 
+// Handbook location
+var handbookPreLink = 'https://handbook.unimelb.edu.au/view/2014/';
+
 // Tell the user what is going on
 console.log('Grabbing lastest links...');
+
+// Function to build recordings.index
+function buildRecordings() {
+    // Tell the user
+    console.log('Updating readable recordings...');
+
+    // Stores IDS
+    var ids = {};
+    var idList = [];
+
+    // Sort by subject
+    for(var key in recordings) {
+        // Grab the data for this key
+        var data = recordings[key];
+
+        // Ensure this ID exists
+        if(!ids[data.id]) {
+            // Create entry
+            ids[data.id] = {
+                name: data.name,
+                sems: []
+            }
+
+            // Store the key
+            idList.push(data.id);
+        }
+
+        // Add the semester to this ID
+        ids[data.id].sems.push({
+            term: data.term,
+            url: data.url
+        });
+    }
+
+    // Sort the key array
+    idList.sort();
+
+    // Begin html data
+    var recData = '<html><head><style type="text/css">ul{margin-top:0px;margin-bottom:0px;}</style></head><body>';
+
+    // Output array
+    for(var i=0; i<idList.length; i++) {
+        // Grab the data
+        var id = idList[i];
+        var data = ids[id];
+
+        // Store this subject
+        recData += '<a href="'+handbookPreLink+id+'" target="_blank">'+id+' - '+data.name+'</a><br><ul>';
+
+        // Sort semesters
+        data.sems.sort(function(a, b) {
+            if(a.term > b.term) {
+                return 1;
+            } else if(a.term < b.term) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
+
+        // Store each term for this subject
+        for(semID in data.sems) {
+            var sem = data.sems[semID];
+            recData += '<li><a href="'+sem.url+'" target="_blank">'+sem.term+'</a></li>';
+        }
+        recData += '</ul>';
+    }
+
+    // Close html
+    recData += '</body></html>';
+
+    // Store data
+    fs.writeFile('./recordings.htm', recData, "utf8", function(err) {
+        if (err) throw err;
+
+        // Success!
+        console.log('Done updating!');
+    });
+}
 
 // Request the page containing links
 var content = '';
@@ -37,13 +119,14 @@ http.get(preLink, function(res) {
         $('table a').each(function() {
             // Grab the link:
             var link = $(this).html();
+            link = link.substring(0, link.length-1)
 
             // Check if it is a valid lecture recording page:
             if(link.length > 30) {
                 // Make sure we don't already have this recording
                 if(!recordings[link]) {
                     // Store that we need to process this link
-                    toProcess.push(link.substring(0, link.length-1));
+                    toProcess.push(link);
                 }
             }
         });
@@ -83,7 +166,7 @@ http.get(preLink, function(res) {
                                 name: name,
                                 url: url,
                                 term: term
-                            }
+                            };
 
                             // Check if there is anything else to process
                             if(++upto < toProcess.length) {
@@ -101,12 +184,14 @@ http.get(preLink, function(res) {
                                     if (err) {
                                         // Failed to write, lets log the JSON (so they dont lose it)
                                         console.log(data);
-
                                         throw err;
                                     }
 
                                     // Success!
                                     console.log('Finished saving recordings!');
+
+                                    // Build the readable recordings now
+                                    buildRecordings();
                                 });
                             }
                         }
