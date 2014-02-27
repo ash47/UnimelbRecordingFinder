@@ -19,9 +19,6 @@ var postLink = '/section.xml';
 // Handbook location
 var handbookPreLink = 'https://handbook.unimelb.edu.au/view/2014/';
 
-// Tell the user what is going on
-console.log('Grabbing lastest links...');
-
 // Function to build recordings.index
 function buildRecordings() {
     // Tell the user
@@ -59,7 +56,7 @@ function buildRecordings() {
     idList.sort();
 
     // Begin html data
-    var recData = '<html><head><style type="text/css">ul{margin-top:0px;margin-bottom:0px;}</style></head><body>';
+    var recData = '<html><head><style type="text/css">ul{margin-top:0px;margin-bottom:0px;}</style></head><body>\n';
 
     // Output array
     for(var i=0; i<idList.length; i++) {
@@ -68,7 +65,7 @@ function buildRecordings() {
         var data = ids[id];
 
         // Store this subject
-        recData += '<a href="'+handbookPreLink+id+'" target="_blank">'+id+' - '+data.name+'</a><br><ul>';
+        recData += '<a href="'+handbookPreLink+id+'" target="_blank">'+id+' - '+data.name+'</a><br>\n<ul>\n';
 
         // Sort semesters
         data.sems.sort(function(a, b) {
@@ -84,9 +81,9 @@ function buildRecordings() {
         // Store each term for this subject
         for(semID in data.sems) {
             var sem = data.sems[semID];
-            recData += '<li><a href="'+sem.url+'" target="_blank">'+sem.term+'</a></li>';
+            recData += '<li><a href="'+sem.url+'" target="_blank">'+sem.term+'</a></li>\n';
         }
-        recData += '</ul>';
+        recData += '</ul>\n';
     }
 
     // Close html
@@ -100,6 +97,9 @@ function buildRecordings() {
         console.log('Done updating!');
     });
 }
+
+// Tell the user what is going on
+console.log('Grabbing lastest links...');
 
 // Request the page containing links
 var content = '';
@@ -159,6 +159,9 @@ http.get(preLink, function(res) {
                             var id = result.section.course[0].identifier[0];
                             var url = result.section.portal[0].url[0];
                             var term = result.section.term[0].name[0];
+
+                            // Tell the user about it
+                            console.log('Added '+id+' '+name+'\n');
 
                             // Store it:
                             recordings[link] = {
