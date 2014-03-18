@@ -48,7 +48,8 @@ function buildRecordings() {
         // Add the semester to this ID
         ids[data.id].sems.push({
             term: data.term,
-            url: data.url
+            url: data.url,
+            niceName: data.niceName
         });
     }
 
@@ -81,7 +82,7 @@ function buildRecordings() {
         // Store each term for this subject
         for(semID in data.sems) {
             var sem = data.sems[semID];
-            recData += '<li><a href="'+sem.url+'" target="_blank">'+sem.term+'</a></li>\n';
+            recData += '<li><a href="'+sem.url+'" target="_blank">'+sem.term+' - '+sem.niceName+'</a></li>\n';
         }
         recData += '</ul>\n';
     }
@@ -156,17 +157,19 @@ http.get(preLink, function(res) {
                         } else {
                             // Grab data
                             var name = result.section.course[0].name[0];
+                            var niceName = result.section.name[0];
                             var id = result.section.course[0].identifier[0];
                             var url = result.section.portal[0].url[0];
                             var term = result.section.term[0].name[0];
 
                             // Tell the user about it
-                            console.log('Added '+id+' '+name+'\n');
+                            console.log('Added '+id+' '+name+' ('+niceName+')\n');
 
                             // Store it:
                             recordings[link] = {
                                 id: id,
                                 name: name,
+                                niceName: niceName,
                                 url: url,
                                 term: term
                             };
