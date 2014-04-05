@@ -10,3 +10,6 @@ Unimelb Recording Finder
 
 ###How do I run this?###
  - You need node.js, parse the app.js file into node.js, see Run.bat as an example.
+
+###Do you keep an up to date list anywhere?###
+ - [AussieServers.net/recordings.htm] (http://aussieservers.net/recordings.htm) is usually up to date.
