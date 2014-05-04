@@ -12,4 +12,4 @@ Unimelb Recording Finder
  - You need node.js, parse the app.js file into node.js, see Run.bat as an example.
 
 ###Do you keep an up to date list anywhere?###
- - [AussieServers.net/recordings.htm] (http://aussieservers.net/recordings.htm) is usually up to date.
+ - [Ash47.net/recordings.htm] (http://ash47.net/recordings.htm) is usually up to date.
