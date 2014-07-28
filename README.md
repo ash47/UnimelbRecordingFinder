@@ -1,6 +1,9 @@
 Unimelb Recording Finder
 =======
 
+##READ THIS##
+ - The servers have been patched and this recording finder no longer works.
+
 ###What does this do?###
  - This finds lecture recording links for unimelb's echo 360 system.
  - See `recordings.json` for raw output data, or `recordings.htm` for something more readable.
